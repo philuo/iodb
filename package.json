@@ -1,0 +1,29 @@
+{
+  "name": "iodb",
+  "version": "1.0.0",
+  "description": "客户端数据库",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "keywords": [
+    "iodb",
+    "indexedDB",
+    "browser",
+    "clientDB"
+  ],
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "author": "Perfumere <developer@philuo.com>",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "oker-limit": "^1.0.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "rollup": "^2.77.2",
+    "rollup-plugin-terser": "^7.0.2"
+  }
+}
