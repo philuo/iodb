@@ -95,6 +95,8 @@ $gte
 $eq
 $ne
 $all
+$in
+$nin
 $or
 ```
 
