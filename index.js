@@ -296,14 +296,6 @@ function _addTask(name, functor) {
 function _find(search, opts, pickMany) {
     const filters = _clone(search);
     const filterKey = Object.keys(filters);
-
-    if (
-        filterKey.length === 1 && filterKey[0] === this.indexes.primary &&
-        (_type(filters[filterKey[0]], 'string') || _type(filters[filterKey[0]], 'number'))
-    ) {
-        return findById.call(this, filters[filterKey[0]]);
-    }
-
     const { resolve, reject, promise } = _signal();
 
     const request = () => {
@@ -332,7 +324,12 @@ function _find(search, opts, pickMany) {
                 }
             }
             else {
-                resolve(_filter(result, filterKey, filters, opts, pickMany));
+                if (pickMany) {
+                    resolve(_filter(result, filterKey, filters, opts, pickMany));
+                }
+                else {
+                    resolve(null);
+                }
             }
         };
     };
@@ -430,7 +427,7 @@ function _filter(list, keys, search, opts, pickMany) {
         return result[0] || null;
     }
 
-    return result.length ? result : null;
+    return result;
 }
 
 function _passPipe(field, filter) {
