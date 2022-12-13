@@ -145,7 +145,8 @@ function close(name) {
  * @param data 数据
  */
 function insert(data) {
-    return _insert(this.database, this.collection, data);
+    const { primary = '_id' } = this.indexes;
+    return _insert(this.database, this.collection, primary, data);
 }
 
 function findById(_id) {
@@ -339,7 +340,7 @@ function _find(search, opts, pickMany) {
     return promise;
 }
 
-function _insert(name, tname, data) {
+function _insert(name, tname, primary, data) {
     const { resolve, reject, promise } = _signal();
 
     const request = async () => {
@@ -347,15 +348,34 @@ function _insert(name, tname, data) {
         let nInserted = 0;
 
         try {
-            if (_type(data, 'object')) {
-                nInserted += 1;
-                await store.put(data);
-            }
             if (_type(data, 'array')) {
-                for (const item of data) {
-                    nInserted += 1;
-                    await store.put(item);
+                const keys = [];
+
+                for (let i = data.length - 1; i >= 0; --i) {
+                    const item = data[i];
+
+                    if (item && !keys.includes(item[primary])) {
+                        if (_type(item.value, 'arraybuffer')) {
+                            await store.put(item.value, item[primary]);
+                        }
+                        else {
+                            await store.put(item, store.keyPath ? undefined : item[primary]);
+                        }
+
+                        keys.push(item[primary]);
+                        nInserted += 1;
+                    }
                 }
+            }
+            else if (_type(data, 'object')) {
+                if (_type(data.value, 'arraybuffer')) {
+                    await store.put(data.value, data[primary]);
+                }
+                else {
+                    await store.put(data, store.keyPath ? undefined : data[primary]);
+                }
+
+                nInserted += 1;
             }
 
             await transaction.complete;
