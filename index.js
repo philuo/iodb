@@ -167,8 +167,8 @@ function findOne(search) {
     return _find.call(this, search, false);
 }
 
-function find(search, opts) {
-    return _find.call(this, search, opts, true);
+function find(search) {
+    return _find.call(this, search, true);
 }
 
 function deleteOne(search) {
@@ -294,7 +294,7 @@ function _addTask(name, functor) {
     }
 }
 
-function _find(search, opts, pickMany) {
+function _find(search, pickMany) {
     const filters = _clone(search);
     const filterKey = Object.keys(filters);
     const { resolve, reject, promise } = _signal();
@@ -315,7 +315,7 @@ function _find(search, opts, pickMany) {
                     next.continue();
                 }
                 else {
-                    const matched = _filter(result, filterKey, filters, opts, pickMany);
+                    const matched = _filter(result, filterKey, filters, pickMany);
 
                     if (!matched) {
                         return next.continue();
@@ -326,7 +326,7 @@ function _find(search, opts, pickMany) {
             }
             else {
                 if (pickMany) {
-                    resolve(_filter(result, filterKey, filters, opts, pickMany));
+                    resolve(_filter(result, filterKey, filters, pickMany));
                 }
                 else {
                     resolve(null);
@@ -421,7 +421,7 @@ function _getRangeQuery(keys, filters) {
     return query;
 }
 
-function _filter(list, keys, search, opts, pickMany) {
+function _filter(list, keys, search, pickMany) {
     const result = [];
 
     for (const item of list) {
