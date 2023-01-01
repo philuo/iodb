@@ -359,7 +359,7 @@ function _insert(name, tname, primary, data) {
                             await store.put(item.value, item[primary]);
                         }
                         else {
-                            await store.put(item, store.keyPath ? undefined : item[primary]);
+                            await store.put(_clone(item), store.keyPath ? undefined : item[primary]);
                         }
 
                         keys.push(item[primary]);
@@ -372,7 +372,7 @@ function _insert(name, tname, primary, data) {
                     await store.put(data.value, data[primary]);
                 }
                 else {
-                    await store.put(data, store.keyPath ? undefined : data[primary]);
+                    await store.put(_clone(data), store.keyPath ? undefined : data[primary]);
                 }
 
                 nInserted += 1;
