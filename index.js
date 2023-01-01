@@ -144,9 +144,9 @@ function close(name) {
  * @param tname 表名
  * @param data 数据
  */
-function insert(data) {
+function insert(data, cloned = false) {
     const { primary = '_id' } = this.indexes;
-    return _insert(this.database, this.collection, primary, data);
+    return _insert(this.database, this.collection, primary, cloned, data);
 }
 
 function findById(_id) {
@@ -340,7 +340,7 @@ function _find(search, pickMany) {
     return promise;
 }
 
-function _insert(name, tname, primary, data) {
+function _insert(name, tname, primary, cloned, data) {
     const { resolve, reject, promise } = _signal();
 
     const request = async () => {
@@ -359,7 +359,7 @@ function _insert(name, tname, primary, data) {
                             await store.put(item.value, item[primary]);
                         }
                         else {
-                            await store.put(_clone(item), store.keyPath ? undefined : item[primary]);
+                            await store.put(cloned ? _clone(item) : item, store.keyPath ? undefined : item[primary]);
                         }
 
                         keys.push(item[primary]);
@@ -372,7 +372,7 @@ function _insert(name, tname, primary, data) {
                     await store.put(data.value, data[primary]);
                 }
                 else {
-                    await store.put(_clone(data), store.keyPath ? undefined : data[primary]);
+                    await store.put(cloned ? _clone(data) : data, store.keyPath ? undefined : data[primary]);
                 }
 
                 nInserted += 1;

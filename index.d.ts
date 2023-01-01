@@ -21,8 +21,8 @@ interface IDBCollectionCtrl {
     findById(id: number | string): Promise<unknown>;
     findOne(filter?: any): Promise<unknown>;
     find(filter?: any): Promise<unknown[]>;
-    updateOne(data: any): Promise<WriteResult>;
-    updateMany(data: any[]): Promise<WriteResult>;
+    updateOne(data: any, cloned?: boolean): Promise<WriteResult>;
+    updateMany(data: any[], cloned?: boolean): Promise<WriteResult>;
     deleteOne(filter?: any): Promise<RemoveResult>;
     deleteMany(filter?: any): Promise<RemoveResult>;
 }
