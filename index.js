@@ -183,6 +183,23 @@ function _delete(search, removeMany) {
     const { promise, resolve, reject } = _signal();
 
     const request = async () => {
+        if (removeMany && (search === undefined || search === null)) {
+            const { store, transaction } = _getStore(this.database, this.collection, 'readwrite');
+            const countReq = store.count();
+    
+            countReq.onsuccess = event => {
+                const count = event.target.result || 0;
+                const request = store.clear();
+    
+                request.onsuccess = () => {
+                    resolve(new RemoveResult(count));
+                }
+            }
+    
+            await transaction.complete;
+            return;
+        }
+
         let matched = await _find.call(this, search, removeMany);
 
         if (!matched) {
