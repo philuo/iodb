@@ -1,6 +1,6 @@
 {
   "name": "iodb",
-  "version": "1.0.10",
+  "version": "1.0.12",
   "description": "客户端数据库",
   "main": "index.js",
   "types": "index.d.ts",

@@ -244,7 +244,7 @@ function _createTables(idb, tables) {
                 }
             }
             if (indexes.index) {
-                for (const indexKey of indexes.unique) {
+                for (const indexKey of indexes.index) {
                     tableIns.createIndex(indexKey, indexKey, { unique: false });
                 }
             }
